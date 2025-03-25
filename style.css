@@ -2,28 +2,22 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  list-style-type: none;
   text-align: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
   min-height: 100vh;
   background: rgb(248, 253, 252);
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap; /* responsive */
-  background: rgb(248, 245, 245);
+
 }
 
-h2 {
-  margin: 6px auto;
-  color: #f7f5f9;
-}
+
 .filter-container {
   text-align: center;
   padding-bottom: 20px;
 }
+
 input {
   margin: 20px auto;
   display: block;
@@ -31,33 +25,79 @@ input {
   text-align: center;
   transition: 0.2s;
 }
+
 input:focus {
   border-radius: 30px;
   background: rgb(238, 238, 238);
 }
+
 .range-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 input[type="range"] {
   width: 250px;
   margin: 0 10px 10px 0;
 }
+
 .range-container span {
   font-size: 1.2rem;
   transform: translateY(-3px);
 }
 
 
-/* Affichage des Pays */
+
+/* Affichage des drapeaux */
 .countries-container {
-  flex: 1 0 25%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1 0 20%;
   min-width: 280px;
   /* border: 1px solid #16d9e7; */
-  background: rgb(6, 5, 5);
-  margin: 10px;
-  border-radius: 5px;
+  background: rgb(8, 8, 8);
+  margin: 8px;
+  border-radius: 8px;
   padding: 10px 20px;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.084);
+}
+
+img {
+  width: 200px;
+  height: 130px;
+}
+
+/* nom du pays */
+h2 {
+  font-size: 1.3rem;
+  color: #f7f5f9;
+}
+
+/* nom de la capitale*/
+h3 {
+  /* padding-bottom: 4%; */
+  color: #f7f5f9;
+  font-size: 0.8rem;
+}
+
+h4 {
+  margin: 6px auto;
+  color: #16d9e7;
+}
+
+
+/* population (nb d'habitants total*/
+p {
+  color: #c1c0c2;
+  font-size: 0.7rem;
+
+}
+
+/* Assure un même espacement entre tous les éléménts */
+img, h2, h3, p {
+  margin: 20px 0; /* 20px en haut et en bas, 0 sur les côtés */
 }

@@ -1,55 +1,82 @@
 // 1 - Tester le lien de l'API dans le navigateur (https://restcountries.com/v3.1/all)
 // https://restcountries.com/v3.1/all
 
-// 3 - Passer les données à une variable
-
 const countriesContainer = document.querySelector(".countries-container");
 const form = document.querySelector("form");
-const input = document.querySelector("input");
+const inputRange = document.getElementById("inputRange");
 
 let countries = [];
 
 // Fonction pour aller chercher les données de l'API
 async function fetchCountries() {
   await fetch(`https://restcountries.com/v3.1/all`)
-    .then((res) => res.json())
+    .then((res) => res.json()) // On transforme la réponse en JSON
     .then((data) => {
-      countries = data; // Stocke directement le tableau retourné
+      countries = data; // Stocke les données API dans "countries"
       console.log(countries); // toujours ce garder l'objet ouvert dans la console
-      countriesDisplay();
+      countriesDisplay(); // ⬅️ On appelle cette fonction après avoir reçu les données
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des pays :", error)
     ); // Gestion des erreurs
 }
 
-// 4 - Créer une fonction d'affichage, et paramétrer l'affichage des cartes de chaque pays grace à la méthode MAP
-
 // Fonction d'affichage des Pays
 function countriesDisplay() {
-  if (countries === null) {
-    countriesContainer.innerHTML = "<h2>Aucun résultat</h2>";
-  } else {
-    countries.length = 24;
+  // if (!countries || countries.length === 0) {
+  //   // Vérifie si countries est null ou vide
+  //   countriesContainer.innerHTML = "<h4>Aucun résultat</h4>";
+  // // } else {
+  // //   console.log("Pays trouvés:", countries);
+  // //   // Si le tableau contient des pays, on affiche les résultats
+  // //   countries.length = 48; // Si tu veux limiter à 48 pays
+
+    // On crée une fonction pour convertir la population :
+    function formattedPopulation(population) {
+      const newPopulation = population.toLocaleString("fr-FR"); // "1 456 789"
+      return newPopulation;
+    }
 
     countriesContainer.innerHTML = countries
+      .filter((country) =>
+        country.name.common.toLowerCase().includes(inputSearch.value) // Filtrage par recherche
+      )
+      .slice(0, inputRange.value)
       .map(
         (country) => `
         <div class="card">
-          <img src="${country.flags.png}" alt="Drapeau de ${country.name.common}">
+          <img src="${country.flags.png}" alt="Drapeau de ${
+          country.name.common
+        }">
           <h2>${country.name.common}</h2>
-        </div>
+          <h3>${country.capital[0]}</h3>
+          <p>Population : ${formattedPopulation(country.population)}</p>
+          
+          </div>
       `
       )
       .join(""); // Évite les virgules dans le HTML
   }
-}
+
 
 // Appeler la fonction pour récupérer et afficher les pays
 fetchCountries();
 
+// Résumé de l'ordre d'exécution 🚀
+// 1️⃣ Le code démarre et exécute fetchCountries();.
+// 2️⃣ fetchCountries() fait une requête à l'API (attend la réponse).
+// 3️⃣ Une fois la réponse reçue, les données sont stockées dans countries.
+// 4️⃣ countriesDisplay() est appelée pour afficher les données sur la page. (il faut le mettre dans le await .then sinon, l'API n'a pas eu le tps de faire sa requête et l'affichage est vide)
+
 // 5 - Récupérer ce qui est tapé dans l'input et filtrer (avant le map) les données
 // country.name.includes(inputSearch.value);
+
+const inputSearch = document.getElementById("inputSearch");
+inputSearch.addEventListener("input", (e) => {
+  // console.log(e.target.value); // On veut récupérer la valeur de l'input
+  // a chaque fois que qqc est tapé dans l'input on peut afficher les plats (en temps réel) :
+  fetchCountries(e.target.value.toLowerCase()).then(() => countriesDisplay());
+});
 
 // 6 - Avec la méthode Slice gérer le nombre de pays affichés (inputRange.value)
 
@@ -67,26 +94,8 @@ fetchCountries();
 //      return ...
 //    }
 //     })
-//     .slice(0, inputRange.Value)
+//     .slice(0, inputRange.value)
 //     .map((country) => `
 //     <div class="card">
 //     </div>
 //     `)
-
-// let meals = [];
-
-// // Fonction pour aller chercher les données avec l'API
-// async function fetchMeals() {
-//   // await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=duck") // on veut remplacer "duck" par la recherche de l'utilisateur ()= valeur de l'input) = avec le paramètre "search" de la fonction :
-//   // await fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=" + search) AUTRE FACON D'ECRIRE:
-//   await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=Duck`)
-//     .then((res) =>
-//       // console.log(res)
-//       res.json()
-//     )
-//     // .then((data) => console.log(data.meals))
-//     .then((data) => (meals = data.meals)); // On met les données dans le tableau meals
-//   console.log(meals); // toujours ce garder l'objet ouvert dans la console
-// }
-
-// fetchMeals();
