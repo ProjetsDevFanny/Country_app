@@ -2,8 +2,14 @@
 // https://restcountries.com/v3.1/all
 
 const countriesContainer = document.querySelector(".countries-container");
-const form = document.querySelector("form");
-const inputRange = document.getElementById("inputRange");
+const inputSearch = document.getElementById("inputSearch");
+const rangeSlider = document.getElementById("inputRange");
+const rangeValue = document.getElementById("rangeValue");
+
+// On récupère les 3 boutons:
+const triCroissant = document.getElementById("minToMax");
+const triDecroissant = document.getElementById("maxToMin");
+const triAlpha = document.getElementById("alpha");
 
 let countries = [];
 
@@ -23,43 +29,50 @@ async function fetchCountries() {
 
 // Fonction d'affichage des Pays
 function countriesDisplay() {
-  // if (!countries || countries.length === 0) {
-  //   // Vérifie si countries est null ou vide
-  //   countriesContainer.innerHTML = "<h4>Aucun résultat</h4>";
-  // // } else {
-  // //   console.log("Pays trouvés:", countries);
-  // //   // Si le tableau contient des pays, on affiche les résultats
-  // //   countries.length = 48; // Si tu veux limiter à 48 pays
+  const searchTerm = inputSearch.value.toLowerCase(); // Récupère le texte entré
+  const numberOfCountries = rangeSlider.value; // Nombre de pays à afficher
 
-    // On crée une fonction pour convertir la population :
-    function formattedPopulation(population) {
-      const newPopulation = population.toLocaleString("fr-FR"); // "1 456 789"
-      return newPopulation;
-    }
+  // Met à jour la valeur affichée à côté du curseur
+  rangeValue.textContent = numberOfCountries;
 
-    countriesContainer.innerHTML = countries
-      .filter((country) =>
-        country.name.common.toLowerCase().includes(inputSearch.value) // Filtrage par recherche
-      )
-      .slice(0, inputRange.value)
-      .map(
-        (country) => `
+  // On crée une fonction pour convertir la population :
+  function formattedPopulation(population) {
+    const newPopulation = population.toLocaleString("fr-FR"); // "1 456 789"
+    return newPopulation;
+  }
+
+  // Filtrage et limitation des pays affichés
+  const filteredCountries = countries
+    .filter((country) => country.name.common.toLowerCase().includes(searchTerm))
+    .slice(0, numberOfCountries);
+
+  // Génération du HTML
+  countriesContainer.innerHTML = filteredCountries
+    .map(
+      (country) => `
         <div class="card">
           <img src="${country.flags.png}" alt="Drapeau de ${
-          country.name.common
-        }">
+        country.name.common
+      }">
           <h2>${country.name.common}</h2>
-          <h3>${country.capital[0]}</h3>
+          <h3>${country.capital ? country.capital[0] : "Aucune capitale"}</h3>
           <p>Population : ${formattedPopulation(country.population)}</p>
           
           </div>
       `
-      )
-      .join(""); // Évite les virgules dans le HTML
-  }
+    )
+    .join(""); // Évite les virgules dans le HTML
+}
 
+// Met à jour l'affichage à chaque modification du texte ou du curseur
+inputSearch.addEventListener("input", countriesDisplay);
+rangeSlider.addEventListener("input", countriesDisplay);
 
-// Appeler la fonction pour récupérer et afficher les pays
+triCroissant.addEventListener("click", countriesDisplay);
+triDecroissant.addEventListener("click", countriesDisplay);
+triAlpha.addEventListener("click", countriesDisplay);
+
+// Charger les pays au démarrage
 fetchCountries();
 
 // Résumé de l'ordre d'exécution 🚀
@@ -67,18 +80,6 @@ fetchCountries();
 // 2️⃣ fetchCountries() fait une requête à l'API (attend la réponse).
 // 3️⃣ Une fois la réponse reçue, les données sont stockées dans countries.
 // 4️⃣ countriesDisplay() est appelée pour afficher les données sur la page. (il faut le mettre dans le await .then sinon, l'API n'a pas eu le tps de faire sa requête et l'affichage est vide)
-
-// 5 - Récupérer ce qui est tapé dans l'input et filtrer (avant le map) les données
-// country.name.includes(inputSearch.value);
-
-const inputSearch = document.getElementById("inputSearch");
-inputSearch.addEventListener("input", (e) => {
-  // console.log(e.target.value); // On veut récupérer la valeur de l'input
-  // a chaque fois que qqc est tapé dans l'input on peut afficher les plats (en temps réel) :
-  fetchCountries(e.target.value.toLowerCase()).then(() => countriesDisplay());
-});
-
-// 6 - Avec la méthode Slice gérer le nombre de pays affichés (inputRange.value)
 
 // 7 - Gérer les 3 boutons pour trier (méthode sort()) les pays
 
