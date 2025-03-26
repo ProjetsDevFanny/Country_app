@@ -6,11 +6,6 @@ const inputSearch = document.getElementById("inputSearch");
 const rangeSlider = document.getElementById("inputRange");
 const rangeValue = document.getElementById("rangeValue");
 
-// On récupère les 3 boutons:
-const triCroissant = document.getElementById("minToMax");
-const triDecroissant = document.getElementById("maxToMin");
-const triAlpha = document.getElementById("alpha");
-
 let countries = [];
 
 // Fonction pour aller chercher les données de l'API
@@ -52,16 +47,14 @@ function countriesDisplay() {
   countriesContainer.innerHTML = filteredCountries
     .map(
       (country) => `
-        <div class="card">
-          <img src="${country.flags.png}" alt="Drapeau de ${
-        country.name.common
-      }">
-          <h2>${country.name.common}</h2>
-          <h3>${country.capital ? country.capital[0] : "Aucune capitale"}</h3>
-          <p>Population : ${formattedPopulation(country.population)}</p>
-          
-          </div>
-      `
+    <div class="card">
+    <img src="${country.flags.png}" alt="Drapeau de ${country.name.common}">
+    <h2>${country.name.common}</h2>
+    <h3>${country.capital ? country.capital[0] : "Aucune capitale"}</h3>
+    <p>Population : ${formattedPopulation(country.population)}</p>
+    
+    </div>
+    `
     )
     .join(""); // Évite les virgules dans le HTML
 }
@@ -70,30 +63,96 @@ function countriesDisplay() {
 inputSearch.addEventListener("input", countriesDisplay);
 rangeSlider.addEventListener("input", countriesDisplay);
 
-// triCroissant.addEventListener("click", countriesDisplay);
-// triDecroissant.addEventListener("click", countriesDisplay);
-// triAlpha.addEventListener("click", countriesDisplay);
-
 // Charger les pays au démarrage
 fetchCountries();
+
+// On récupère les 3 boutons:
+const triCroissant = document.getElementById("minToMax");
+const triDecroissant = document.getElementById("maxToMin");
+const triAlpha = document.getElementById("alpha");
 
 let initialOrderCountries = [];
 let sorted = false;
 
-triAlpha.addEventListener("click", () => {
+// Tri alphabétique de pays au click du bouton "Alpha" puis remise à l'ordre initial au 2nd click
+
+// triAlpha.addEventListener("click", () => {
+//   if (sorted) {
+//     // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
+//     countries = [...initialOrderCountries];
+//   } else {
+//     // Sinon, on trie par ordre alphabétique
+//     countries = [...initialOrderCountries].sort((a, b) =>
+//       a.name.common.localeCompare(b.name.common)
+//     );
+//   }
+//   sorted = !sorted; // Inverse l'état de sorted au click = sinon, on reste à l'état du 1er click (tri alpha)
+//   countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
+// });
+
+// // Tri croissant de la population des pays au click du bouton "minToMax" puis remise à l'ordre initial au 2nd click
+
+// triCroissant.addEventListener("click", () => {
+//   if (sorted) {
+//     // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
+//     countries = [...initialOrderCountries];
+//   } else {
+//     // Sinon, on trie par ordre croissant
+//     countries = [...initialOrderCountries].sort(
+//       (a, b) => a.population - b.population
+//     );
+//   }
+//   sorted = !sorted; // Inverse l'état de sorted au click = sinon, on reste à l'état du 1er click (tri alpha)
+//   countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
+// });
+
+// // Tri décroissant de pays au click du bouton "maxToMin" puis remise à l'ordre initial au 2nd click
+
+// triDecroissant.addEventListener("click", () => {
+//   if (sorted) {
+//     // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
+//     countries = [...initialOrderCountries];
+//   } else {
+//     // Sinon, on trie par ordre décroissant
+//     countries = [...initialOrderCountries].sort(
+//       (a, b) => b.population - a.population
+//     );
+//   }
+//   sorted = !sorted; // Inverse l'état de sorted au click = sinon, on reste à l'état du 1er click (tri alpha)
+//   countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
+// });
+
+// Regroupement des 3 évènements dans une fonction
+
+// Fonction de tri générique
+function sortCountries(critereTri) {
   if (sorted) {
-    // Rétablir l'ordre initial
-    countries = [...initialOrderCountries]; // On rétablit l'ordre original
+    // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
+    countries = [...initialOrderCountries];
   } else {
-    // Trier par ordre alphabétique
-    countries = [...initialOrderCountries].sort((a, b) =>
-      a.name.common.localeCompare(b.name.common)
-    );
+    // Sinon, on trie en fonction du critère
+    countries = [...initialOrderCountries].sort((a, b) => {
+      if (critereTri === "alpha") {
+        return a.name.common.localeCompare(b.name.common);
+      } else if (critereTri === "croissant") {
+        return a.population - b.population;
+      } else if (critereTri === "decroissant") {
+        return b.population - a.population;
+      }
+    });
   }
 
-  sorted = !sorted; // Inverse l'état de sorted
-  countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
-});
+  sorted = !sorted; // On inverse l'état du tri
+  countriesDisplay(); // Mise à jour de l'affichage
+}
+
+// Ajout des écouteurs d'événements
+triAlpha.addEventListener("click", () => sortCountries("alpha"));
+triCroissant.addEventListener("click", () => sortCountries("croissant"));
+triDecroissant.addEventListener("click", () => sortCountries("decroissant"));
+
+// Aute méthode de tri alpha, plus longue :
+
 // countries.sort((a, b) => {
 //   if (a.name.common < b.name.common) {
 //     return -1; // a vient avant b
@@ -102,14 +161,6 @@ triAlpha.addEventListener("click", () => {
 //   }
 //   return 0; // égalité
 // });
-
-//   if (sorted) {
-//     initialOrderCountries;
-//   } else {
-//     countriesSorted;
-//   }
-//   }
-// );
 
 // Résumé de l'ordre d'exécution 🚀
 // 1️⃣ Le code démarre et exécute fetchCountries();.
