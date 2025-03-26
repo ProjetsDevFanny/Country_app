@@ -21,6 +21,8 @@ async function fetchCountries() {
       countries = data; // Stocke les données API dans "countries"
       console.log(countries); // toujours ce garder l'objet ouvert dans la console
       countriesDisplay(); // ⬅️ On appelle cette fonction après avoir reçu les données
+      // Copie initiale de l'ordre des pays
+      initialOrderCountries = [...countries]; // création d'un copie de countries pour l'utilser dans les 2nds click des boutons
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des pays :", error)
@@ -68,12 +70,46 @@ function countriesDisplay() {
 inputSearch.addEventListener("input", countriesDisplay);
 rangeSlider.addEventListener("input", countriesDisplay);
 
-triCroissant.addEventListener("click", countriesDisplay);
-triDecroissant.addEventListener("click", countriesDisplay);
-triAlpha.addEventListener("click", countriesDisplay);
+// triCroissant.addEventListener("click", countriesDisplay);
+// triDecroissant.addEventListener("click", countriesDisplay);
+// triAlpha.addEventListener("click", countriesDisplay);
 
 // Charger les pays au démarrage
 fetchCountries();
+
+let initialOrderCountries = [];
+let sorted = false;
+
+triAlpha.addEventListener("click", () => {
+  if (sorted) {
+    // Rétablir l'ordre initial
+    countries = [...initialOrderCountries]; // On rétablit l'ordre original
+  } else {
+    // Trier par ordre alphabétique
+    countries = [...initialOrderCountries].sort((a, b) =>
+      a.name.common.localeCompare(b.name.common)
+    );
+  }
+
+  sorted = !sorted; // Inverse l'état de sorted
+  countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
+});
+// countries.sort((a, b) => {
+//   if (a.name.common < b.name.common) {
+//     return -1; // a vient avant b
+//   } else if (a.name.common > b.name.common) {
+//     return 1; // b vient avant a
+//   }
+//   return 0; // égalité
+// });
+
+//   if (sorted) {
+//     initialOrderCountries;
+//   } else {
+//     countriesSorted;
+//   }
+//   }
+// );
 
 // Résumé de l'ordre d'exécution 🚀
 // 1️⃣ Le code démarre et exécute fetchCountries();.
@@ -82,21 +118,3 @@ fetchCountries();
 // 4️⃣ countriesDisplay() est appelée pour afficher les données sur la page. (il faut le mettre dans le await .then sinon, l'API n'a pas eu le tps de faire sa requête et l'affichage est vide)
 
 // 7 - Gérer les 3 boutons pour trier (méthode sort()) les pays
-
-//s'appuyez sur l'architecture de l'application de cuisine
-
-// Architecture de la fonction d'affichage
-// countriesContainer.innerHtml = monTableau
-// .filter((country) => country.nomdupays.includes(inputSearch.value))
-// .sort((a,b) => {
-//   if(...) {
-//      return ...
-//    } else if (...) {
-//      return ...
-//    }
-//     })
-//     .slice(0, inputRange.value)
-//     .map((country) => `
-//     <div class="card">
-//     </div>
-//     `)
