@@ -67,20 +67,20 @@ function countriesDisplay() {
       <p>Population : ${country.population.toLocaleString(
         "fr-FR"
       )} habitants</p>
-  
-    </div>
+      </div>
     `
+      //(A noter = .svg plus léger que .png)
     )
     .join(""); // Évite les virgules dans le HTML
 }
 
-//A noter = .svg plus léger que .png
+// Gestion des eventListeners
 
-// Met à jour l'affichage à chaque modification du texte ou du curseur
+// Met à jour l'affichage à chaque modification du texte dans l'input, ou du curseur
 inputSearch.addEventListener("input", countriesDisplay);
 inputRange.addEventListener("input", countriesDisplay);
 
-// Gestion des click sur les 3 boutons: (évite de créer 3 events)
+// Gestion des clicks sur les 3 boutons: (évite de créer 3 events)
 btnSort.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     critereTri = e.target.id;
@@ -91,63 +91,8 @@ btnSort.forEach((btn) => {
 // Charger les pays au démarrage
 fetchCountries();
 
-// let initialOrderCountries = [];
-// let sortedAlpha = false;
-// let sortedCroi = false;
-// let sortedDec = false;
-
-// Tri alphabétique de pays au click du bouton "Alpha" puis remise à l'ordre initial au 2nd click
-
-// triAlpha.addEventListener("click", () => {
-//   if (sortedAlpha) {
-//     // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
-//     countries = [...initialOrderCountries];
-//   } else {
-//     // Sinon, on trie par ordre alphabétique
-//     countries = [...initialOrderCountries].sort((a, b) =>
-//       a.name.common.localeCompare(b.name.common)
-//     );
-//   }
-//   sortedAlpha = !sortedAlpha; // Inverse l'état de sorted au click = sinon, on reste à l'état du 1er click (tri alpha)
-//   countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
-// });
-
-// // Tri croissant de la population des pays au click du bouton "minToMax" puis remise à l'ordre initial au 2nd click
-
-// triCroissant.addEventListener("click", () => {
-//   if (sortedCroi) {
-//     // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
-//     countries = [...initialOrderCountries];
-//   } else {
-//     // Sinon, on trie par ordre croissant
-//     countries = [...initialOrderCountries].sort(
-//       (a, b) => a.population - b.population
-//     );
-//   }
-//   sortedCroi = !sortedCroi; // Inverse l'état de sorted au click = sinon, on reste à l'état du 1er click (tri alpha)
-//   countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
-// });
-
-// // Tri décroissant de pays au click du bouton "maxToMin" puis remise à l'ordre initial au 2nd click
-
-// triDecroissant.addEventListener("click", () => {
-//   if (sortedDec) {
-//     // Si le tableau a déjà été trié (sorted === true), on rétablit l'ordre initial
-//     countries = [...initialOrderCountries];
-//   } else {
-//     // Sinon, on trie par ordre décroissant
-//     countries = [...initialOrderCountries].sort(
-//       (a, b) => b.population - a.population
-//     );
-//   }
-//   sortedDec = !sortedDec; // Inverse l'état de sorted au click = sinon, on reste à l'état du 1er click (tri alpha)
-//   countriesDisplay(); // Met à jour l'affichage avec les nouvelles données
-// });
-
 // Résumé de l'ordre d'exécution 🚀
 // 1️⃣ Le code démarre et exécute fetchCountries();.
 // 2️⃣ fetchCountries() fait une requête à l'API (attend la réponse).
 // 3️⃣ Une fois la réponse reçue, les données sont stockées dans countries.
 // 4️⃣ countriesDisplay() est appelée pour afficher les données sur la page. (il faut le mettre dans le await .then sinon, l'API n'a pas eu le tps de faire sa requête et l'affichage est vide)
-
-// 7 - Gérer les 3 boutons pour trier (méthode sort()) les pays
