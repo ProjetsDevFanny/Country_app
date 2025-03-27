@@ -53,27 +53,30 @@ input[type="range"] {
 .countries-container {
   display: flex;
   flex-wrap: wrap;
+  /* text-align: center; */
 }
 
 .card {
   flex: 1 0 20%;
   min-width: 280px;
   /* border: 1px solid #16d9e7; */
-  background: rgb(8, 8, 8);
-  margin: 8px;
-  border-radius: 8px;
+  background: rgb(146, 148, 183);
+  margin: 5px;
+  border-radius: 20px;
   padding: 10px 20px;
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.084);
+  box-shadow:  0 1px 9px 0px rgb(63, 61, 121);
+  border: 1px solid rgb(107, 107, 209);
 }
 
 img {
   width: 200px;
   height: 130px;
+  object-fit: cover;
 }
 
 /* nom du pays */
 h2 {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: #f7f5f9;
 }
 
@@ -92,12 +95,12 @@ h4 {
 
 /* population (nb d'habitants total*/
 p {
-  color: #c1c0c2;
+  color: #ebeaec;
   font-size: 0.7rem;
 
 }
 
 /* Assure un même espacement entre tous les éléménts */
-img, h2, h3, p {
+img, h3, p {
   margin: 20px 0; /* 20px en haut et en bas, 0 sur les côtés */
 }
